@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">OkHttp Example</string>
+    <string name="name">Name</string>
+    <string name="password">password</string>
+    <string name="ok">OK</string>
+    <string name="method_selector">Method selector</string>
+</resources>
