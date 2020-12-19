@@ -1,36 +1,45 @@
 package ru.job4j.okhttp_example;
 
-import android.support.annotation.NonNull;
-import java.io.IOException;
-import java.util.Objects;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class OkHttpMaster {
-    private void authorizationRequest(String name, String login) {
-        String path = "https://api.github.com/users/whatever? client_id="
-                + name + "&client_secret=" + login;
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url(path
-                ).build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
-            }
-            @Override
-            public void onResponse(@NonNull Call call,
-                                   @NonNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    final String strResponse = Objects.requireNonNull(response.body()).string();
-                    System.out.println(strResponse);
+    private void authorizationRequest(String name, String token) {
+        String path = "https://api.github.com";
+        HttpURLConnection connection = null;
+        try {
+            connection = (HttpURLConnection) new URL(path).openConnection();
+            connection.setRequestMethod("GET");
+            connection.setUseCaches(false);
+            connection.setConnectTimeout(400);
+            connection.setReadTimeout(400);
+            connection.connect();
+            if (HttpURLConnection.HTTP_OK == connection.getResponseCode()) {
+                System.out.println("<<< ЗАПРОС ВЫПОЛНЕН УСПЕШНО >>>");
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+                StringBuilder builder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line).append("\n");
                 }
+                System.out.println(builder.toString());
+            } else {
+                System.out.println("СЛУЧИЛОСЬ ТАКОЕ ДЕРЬМО: "
+                        + connection.getResponseCode() + ", " + connection.getResponseMessage());
             }
-        });
+        }catch (Throwable trouble) {
+            trouble.printStackTrace();
+        } finally {
+            if (connection != null) {
+                System.out.println("<<< ПОДКЛЮЧЕНИЕ ЗАВЕРШЕНО >>>");
+                connection.disconnect();
+            }
+        }
     }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
