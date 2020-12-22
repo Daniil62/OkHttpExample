@@ -3,12 +3,14 @@ package ru.job4j.okhttp_example;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 
 public class MainActivity extends AppCompatActivity {
+    private Toolbar toolbar;
     private String name = "";
     private String token = "";
     private boolean variant = false;
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.toolbar = findViewById(R.id.main_toolbar);
+        setToolbar();
         Switch changer = findViewById(R.id.method_selector_switch);
         EditText nameField = findViewById(R.id.name_editText);
         EditText passwordField = findViewById(R.id.password_editText);
@@ -43,6 +47,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         ok.setOnClickListener(v -> selector(variant));
+    }
+    private void setToolbar() {
+        Intent intent = getIntent();
+        if (toolbar != null) {
+            if (intent != null) {
+                toolbar.setTitle(getResources().getString(R.string.app_name));
+            }
+            setSupportActionBar(toolbar);
+        }
     }
     private void selector(boolean variant) {
         int id;

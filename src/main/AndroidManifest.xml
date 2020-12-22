@@ -18,7 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ResultActivity" />
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="ru.job4j.okhttp_example.MainActivity"/>
+
+        <activity android:name=".ResultActivity"
+            android:parentActivityName="ru.job4j.okhttp_example.MainActivity"/>
     </application>
 
 </manifest>
